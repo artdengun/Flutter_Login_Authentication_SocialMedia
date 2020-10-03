@@ -1,8 +1,15 @@
+import 'package:Flutter_Login_Authentication_SocialMedia/auth_services.dart';
 import 'package:flutter/material.dart';
 
-import 'Register.dart';
+import '../ProfilePage.dart';
 
-class LoginPage extends StatelessWidget {
+// ignore: must_be_immutable
+class RegisterPage extends StatelessWidget {
+  // final FirebaseUser user;
+  TextEditingController _emailController = TextEditingController(text: "");
+  TextEditingController _passController = TextEditingController(text: "");
+
+  // RegisterPage({Key key, this.user}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +44,7 @@ class LoginPage extends StatelessWidget {
               ),
 // Tulisan Welcome back
               Text(
-                "Welcome back",
+                "REGISTER ",
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w300,
@@ -57,7 +64,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     TextFormField(
-                      // controller: _emailController,
+                      controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: "Email",
@@ -86,7 +93,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     TextFormField(
-                      // controller: _passController,
+                      controller: _passController,
                       obscureText: true,
                       decoration: InputDecoration(
                         hintText: "Password",
@@ -112,9 +119,39 @@ class LoginPage extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       child: RaisedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          SignInSignUpResult result =
+                              await AuthServices.createUser(
+                                  email: _emailController.text,
+                                  pass: _passController.text);
+                          if (result.user != null) {
+                            // Go to Profile Page
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfilePage(
+                                          user: result.user,
+                                        )));
+                          } else {
+                            // Show Dialog
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: Text("Error"),
+                                      content: Text(result.message),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("OK"),
+                                        )
+                                      ],
+                                    ));
+                          }
+                        },
                         child: Text(
-                          "Login",
+                          "REGISTER",
                           style: TextStyle(color: Colors.white),
                         ),
                         shape: RoundedRectangleBorder(
@@ -152,67 +189,8 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                child: RaisedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Login with Google",
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  color: Colors.white,
-                  elevation: 0,
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                ),
-              ),
-              SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                child: RaisedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Login with Facebook",
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  color: Colors.white,
-                  elevation: 0,
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                ),
-              ),
-              SizedBox(height: 30),
-            ])),
-            // SLiverFillRemaining ini akan selalu berada dibawah
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                margin: EdgeInsets.only(bottom: 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      "Don\’t have account ?",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                      Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => RegisterPage()));
-                      },
-                      child: Text(
-                        "Register here",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
+                ])),
+            // SLiverFillRemaining ini akan selalu berada dibawa
           ],
         )),
       ),

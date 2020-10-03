@@ -31,6 +31,9 @@ dependencies:
   cupertino_icons: ^0.1.3
   firebase_auth:
   path_provider:
+  google_sign_in:
+  flutter_facebook_login:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
